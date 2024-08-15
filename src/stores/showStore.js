@@ -12,6 +12,8 @@ const CACHE_EXPIRATION_TIME = 24 * 60 * 60 * 1000;
 const CACHE_KEY_All_SHOWS = "allShows";
 const CACHE_KEY = "shows";
 const CACHE_KEY_SELECTED_SHOWS = "selectedShow";
+const CACHE_KEY_SELECTED_SEARCH_SHOW = "selectedSearchShow"
+const apiUrl = "https://api.tvmaze.com"
 
 const persistedSelectedShow = getCachedData(CACHE_KEY_SELECTED_SHOWS);
 
@@ -29,14 +31,13 @@ export const useShowStore = defineStore("showStore", () => {
   const isFetchingShowDetails = ref(false)
   const showDetailsError = ref(null)
 
-  // Fetch shows from the API or localStorage
   const fetchShows = async (query = "") => {
     try {
       if (query) {
         isSearching.value = true;
         searchError.value = null;
 
-        const cachedData = getCachedData("selectedSearchShow");
+        const cachedData = getCachedData(CACHE_KEY_SELECTED_SEARCH_SHOW);
 
         if (
           cachedData &&
@@ -46,7 +47,7 @@ export const useShowStore = defineStore("showStore", () => {
           searchedShows.value = cachedData.data;
         } else {
           const searchResults = await fetchFromAPI(
-            `https://api.tvmaze.com/search/shows?q=${query}`,
+            `${apiUrl}/search/shows?q=${query}`,
           );
           const shows = searchResults.map((item) => item.show);
           searchedShows.value = shows;
@@ -61,7 +62,7 @@ export const useShowStore = defineStore("showStore", () => {
           !cachedData ||
           isCacheExpired(cachedData.timestamp, CACHE_EXPIRATION_TIME)
         ) {
-          const allShows = await fetchFromAPI("https://api.tvmaze.com/shows");
+          const allShows = await fetchFromAPI(`${apiUrl}/shows`);
           shows.value = allShows;
           cacheData(allShows, CACHE_KEY_All_SHOWS);
         } else {
@@ -83,13 +84,11 @@ export const useShowStore = defineStore("showStore", () => {
     searchQuery.value = query;
   };
 
-  // Set selected show and persist to localStorage
   const setSelectedShow = (show) => {
     selectedShow.value = show;
     localStorage.setItem(CACHE_KEY_SELECTED_SHOWS, JSON.stringify(show));
   };
 
-  // Computed property to group shows by genres
   const filteredAndGroupedShows = computed(() => {
     return shows.value.reduce((grouped, show) => {
       show.genres.forEach((genre) => {
@@ -102,7 +101,6 @@ export const useShowStore = defineStore("showStore", () => {
     }, {});
   });
 
-  // Computed property to check if there are results
   const hasResults = computed(() =>
     Object.values(filteredAndGroupedShows.value).some(
       (shows) => shows.length > 0,
@@ -111,15 +109,14 @@ export const useShowStore = defineStore("showStore", () => {
 
   const setSelectSearchedShow = (show) => {
     selectSearchedShow.value = show;
-    // Store the selected show's ID or URL in local storage
-    cacheData(show, "selectedSearchShow");
+    cacheData(show, CACHE_KEY_SELECTED_SEARCH_SHOW);
   };
 
   const getSelectedShow = async (id) => {
     isFetchingShowDetails.value = true
     try {
       const res = await fetchFromAPI(
-        `https://api.tvmaze.com/search/shows/${id}`,
+        `${apiUrl}/search/shows/${id}`,
       );
       selectedSearchedShow.value = res;
       isFetchingShowDetails.value = false
@@ -130,10 +127,8 @@ export const useShowStore = defineStore("showStore", () => {
     }
   };
 
-  // Automatically fetch shows when the store is created
   fetchShows("");
 
-  // Return state and methods to the component
   return {
     shows,
     selectedShow,
@@ -142,7 +137,6 @@ export const useShowStore = defineStore("showStore", () => {
     setSelectedShow,
     hasResults,
     filteredAndGroupedShows,
-    fetchShows,
     debouncedFetchShows,
     searchQuery,
     setSearchQuery,
