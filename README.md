@@ -35,6 +35,11 @@ This is a Vue.js application that allows users to browse and search for TV shows
 - Type `npm run dev` to run frontend app locally
 - Type `npm run test:unit` to run unit test
 
+# Deployment
+
+- The application is currently deployed in Netlify
+- You can access the application at [Waka shows](https://wakashows.netlify.app/)
+
 ## AUTHOR
 
 [Valentine Ezeh](https://github.com/valentineezeh/waka-tv-shows)
