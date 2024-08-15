@@ -15,7 +15,7 @@ const useStore = useShowStore();
       <SearchBar v-model="useStore.searchQuery" />
     </div>
     <Loader v-if="useStore.isLoading" />
-    <Error v-else-if="useStore.error" message="An error occurred" />
+    <Error v-else-if="useStore.error" :message="useStore.error" />
     <ShowList
       v-else
       :filteredAndGroupedShows="useStore.filteredAndGroupedShows"

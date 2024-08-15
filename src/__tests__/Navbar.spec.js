@@ -40,7 +40,7 @@ describe("Navbar", () => {
     });
 
     const routerLink = wrapper.findComponent(RouterLink);
-    expect(routerLink.text()).toBe("Waka Movies");
+    expect(routerLink.text()).toBe("Waka Shows");
   });
 
   it("renders the correct link path", () => {

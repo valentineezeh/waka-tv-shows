@@ -4,6 +4,6 @@ import { RouterLink } from "vue-router";
 
 <template>
   <div class="topnav" id="myTopnav">
-    <RouterLink to="/" class="active">Waka Movies</RouterLink>
+    <RouterLink to="/" class="active">Waka Shows</RouterLink>
   </div>
 </template>

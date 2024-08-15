@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { computed, ref, nextTick } from "vue";
+import { computed, ref } from "vue";
 import { debounce } from "throttle-debounce";
 import {
   fetchFromAPI,
@@ -13,21 +13,21 @@ const CACHE_KEY_All_SHOWS = "allShows";
 const CACHE_KEY = "shows";
 const CACHE_KEY_SELECTED_SHOWS = "selectedShow";
 
-const persistedSelectedShow = localStorage.getItem(CACHE_KEY_SELECTED_SHOWS);
+const persistedSelectedShow = getCachedData(CACHE_KEY_SELECTED_SHOWS);
 
 export const useShowStore = defineStore("showStore", () => {
   const shows = ref([]);
   const searchedShows = ref([]);
   const searchQuery = ref("");
   const selectedSearchedShow = ref(null);
-  const selectedShow = ref(
-    persistedSelectedShow ? JSON.parse(persistedSelectedShow) : null,
-  );
+  const selectedShow = ref(persistedSelectedShow);
   const isLoading = ref(false);
   const error = ref(null);
   const selectSearchedShow = ref(null);
   const isSearching = ref(false);
   const searchError = ref(null);
+  const isFetchingShowDetails = ref(false)
+  const showDetailsError = ref(null)
 
   // Fetch shows from the API or localStorage
   const fetchShows = async (query = "") => {
@@ -116,14 +116,19 @@ export const useShowStore = defineStore("showStore", () => {
   };
 
   const getSelectedShow = async (id) => {
+    isFetchingShowDetails.value = true
     try {
-       const res = await fetchFromAPI(`https://api.tvmaze.com/search/shows/${id}`)
-       selectedSearchedShow.value = res
+      const res = await fetchFromAPI(
+        `https://api.tvmaze.com/search/shows/${id}`,
+      );
+      selectedSearchedShow.value = res;
+      isFetchingShowDetails.value = false
       cacheData(res, CACHE_KEY_SELECTED_SHOWS);
-    } catch(error) {
-      console.error(error);
+    } catch (error) {
+      isFetchingShowDetails.value = false
+      showDetailsError.value = error.message || 'Error fetching show details.'
     }
-  }
+  };
 
   // Automatically fetch shows when the store is created
   fetchShows("");
@@ -144,6 +149,8 @@ export const useShowStore = defineStore("showStore", () => {
     searchedShows,
     setSelectSearchedShow,
     isSearching,
-    getSelectedShow
+    getSelectedShow,
+    isFetchingShowDetails,
+    showDetailsError
   };
 });

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useRoute } from "vue-router";
 import Button from "@/components/Button.vue";
 import { stripTags, defaultImg } from "@/utils";
@@ -28,6 +28,15 @@ onMounted(async () => {
   }
 })
 
+const formattedSelectedShow = computed(() => {
+  return {
+    ...props.show,
+    image: {
+      original: props.show ? props.show.image.original : defaultImg
+    }
+  }
+})
+
 </script>
 
 <template>
@@ -35,19 +44,19 @@ onMounted(async () => {
     <div class="show-detail-container">
       <div class="image-background-cover">
         <div class="image-container">
-          <img :src="`${show ? show.image.original : defaultImg}`" />
+          <img :src="`${formattedSelectedShow.image.original}`" />
         </div>
       </div>
       <div class="show-detail" v-if="show">
         <div class="show-poster">
-          <img :src="`${show.image ? show.image.original : defaultImg}`" />
+          <img :src="`${formattedSelectedShow.image.original}`" />
         </div>
         <div class="show-text">
           <h2 class="show-title">{{ show.name }}</h2>
           <div class="show-rating">
             <p>Rating: {{ show.rating.average }}</p>
             <p>Language: {{ show.language }}</p>
-            <Button
+            <Button :disabled="!show.officialSite"
               text="Watch on the official site"
               @click="openExternalSite"
             />

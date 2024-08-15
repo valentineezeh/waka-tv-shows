@@ -36,4 +36,5 @@ export const isCacheExpired = (timestamp, expiredTime) => {
   return now - timestamp > expiredTime;
 };
 
-export const defaultImg = "https://static.vecteezy.com/system/resources/previews/005/720/408/original/crossed-image-icon-picture-not-available-delete-picture-symbol-free-vector.jpg"
+export const defaultImg =
+  "https://static.vecteezy.com/system/resources/previews/005/720/408/original/crossed-image-icon-picture-not-available-delete-picture-symbol-free-vector.jpg";

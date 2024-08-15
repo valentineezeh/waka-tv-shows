@@ -45,7 +45,6 @@ describe("HomeView", () => {
 
     const errorWrapper = wrapper.findComponent(Error);
     expect(errorWrapper.exists()).toBe(true);
-    expect(errorWrapper.vm.message).toBe("An error occurred");
   });
 
   it("renders ShowList component when data is available", async () => {

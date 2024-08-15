@@ -6,11 +6,14 @@ defineProps({
   click: {
     type: Function,
   },
+  disabled: {
+    type: Boolean,
+  }
 });
 </script>
 
 <template>
-  <button @click="click">
+  <button @click="click" :disabled="disabled">
     {{ text }}
   </button>
 </template>
