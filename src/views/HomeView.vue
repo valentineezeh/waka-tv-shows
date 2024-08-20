@@ -14,11 +14,11 @@ const useStore = useShowStore();
       <h3>Popular Shows</h3>
       <SearchBar v-model="useStore.searchQuery" />
     </div>
-    <Loader v-if="useStore.isLoading" />
-    <Error v-else-if="useStore.error" :message="useStore.error" />
+    <Loader v-show="useStore.isLoading" />
+    <Error v-show="useStore.error" :message="useStore.error" />
     <ShowList
-      v-else
-      :filteredAndGroupedShows="useStore.filteredAndGroupedShows"
+      v-show="useStore.sortedAndGroupedShows"
+      :sortedAndGroupedShows="useStore.sortedAndGroupedShows"
       :hasResults="useStore.hasResults"
     />
   </div>

@@ -31,6 +31,13 @@ onMounted(async () => {
 const formattedSelectedShow = computed(() => {
   return {
     ...props.show,
+    name: props.show ? props.show.name : 'Not available',
+    rating: props.show ? props.show.rating : 0,
+    language: props.show ? props.show.language : 'Not available',
+    officialSite: props.show ? props.show.officialSite : 'Not available',
+    summary: props.show ? props.show.summary : 'Not available',
+    genres: props.show ? props.show.genres : ['Not available'],
+    premiered: props.show ? props.show.premiered : 'Not available',
     image: {
       original: props.show ? props.show.image.original : defaultImg
     }
@@ -41,40 +48,40 @@ const formattedSelectedShow = computed(() => {
 
 <template>
   <section>
-    <div class="show-detail-container">
+    <div class="show-detail-container" v-show="show">
       <div class="image-background-cover">
         <div class="image-container">
           <img :src="`${formattedSelectedShow.image.original}`" />
         </div>
       </div>
-      <div class="show-detail" v-if="show">
+      <div class="show-detail" >
         <div class="show-poster">
           <img :src="`${formattedSelectedShow.image.original}`" />
         </div>
         <div class="show-text">
-          <h2 class="show-title">{{ show.name }}</h2>
+          <h2 class="show-title">{{ formattedSelectedShow.name }}</h2>
           <div class="show-rating">
-            <p>Rating: {{ show.rating.average }}</p>
-            <p>Language: {{ show.language }}</p>
-            <Button :disabled="!show.officialSite"
+            <p>Rating: {{ formattedSelectedShow.rating.average }}</p>
+            <p>Language: {{ formattedSelectedShow.language }}</p>
+            <Button :disabled="!formattedSelectedShow.officialSite"
               text="Watch on the official site"
               @click="openExternalSite"
             />
           </div>
           <div class="show-summary">
-            {{ stripTags(show.summary) }}
+            {{ stripTags(formattedSelectedShow.summary) }}
             <div class="show-origin">
               <p>Genre:</p>
-              <p>{{ show.genres.join(", ") }}</p>
+              <p>{{ formattedSelectedShow.genres.join(", ") }}</p>
             </div>
             <div class="show-origin">
               <p>Premiered Date:</p>
-              <p>{{ show.premiered }}</p>
+              <p>{{ formattedSelectedShow.premiered }}</p>
             </div>
           </div>
         </div>
       </div>
-      <NotFound v-else />
     </div>
+    <NotFound v-show="!show" />
   </section>
 </template>

@@ -10,9 +10,9 @@ const { selectedShow, isFetchingShowDetails, showDetailsError } = useShowStore()
 <template>
   <section>
     <div>
-      <Loader v-if="isFetchingShowDetails" />
-      <Error v-else-if="showDetailsError" :message="showDetailsError" />
-      <ShowDetails v-else :show="selectedShow" />
+      <Loader v-show="isFetchingShowDetails" />
+      <Error v-show="showDetailsError" :message="showDetailsError" />
+      <ShowDetails v-show="selectedShow" :show="selectedShow" />
     </div>
   </section>
 </template>

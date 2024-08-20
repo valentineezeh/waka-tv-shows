@@ -64,7 +64,6 @@ describe("ShowView", () => {
       },
     });
     await showView.vm.$nextTick();
-
     const notFound = showView.findComponent(NotFound);
     expect(notFound.exists()).toBe(true);
   });

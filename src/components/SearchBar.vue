@@ -46,10 +46,10 @@ const handleFocus = () => {
         @focus="handleFocus"
         @focusout="handleFocusOut"
       />
-      <div class="input-loader" v-if="useStore.isSearching" />
+      <div class="input-loader" v-show="useStore.isSearching" />
     </div>
     <SearchResultCard
-      v-if="useStore.searchQuery.length !== 0"
+      v-show="useStore.searchQuery.trim().length !== 0"
       :searchedShows="useStore.searchedShows"
       :showSearchBar="showSearchBar"
       @pointerdown.prevent

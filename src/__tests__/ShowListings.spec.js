@@ -45,12 +45,6 @@ describe("ShowListings", () => {
       },
     });
 
-    const sortedShows = [...shows].sort((a, b) => {
-      const ratingA = a.rating.average || 0;
-      const ratingB = b.rating.average || 0;
-      return ratingB - ratingA;
-    });
-
     await wrapper.vm.$nextTick();
 
     const cardComponents = wrapper.findAllComponents(Card);
@@ -64,7 +58,7 @@ describe("ShowListings", () => {
       };
     });
 
-    expect(renderedShows).toEqual(sortedShows);
+    expect(renderedShows).toEqual(shows);
   });
 
   it("passes the correct props to the Card components", async () => {
@@ -82,10 +76,7 @@ describe("ShowListings", () => {
     const cardComponents = wrapper.findAllComponents(Card);
 
     cardComponents.forEach((card, index) => {
-      const sortShow = shows.sort(
-        (a, b) => b.rating.average - a.rating.average,
-      );
-      const show = sortShow[index];
+      const show = shows[index];
       expect(card.props("imageUrl")).toBe(show.image.medium);
       expect(card.props("title")).toBe(show.name);
       expect(card.props("rating")).toBe(show.rating.average);

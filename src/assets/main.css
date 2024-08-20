@@ -394,6 +394,7 @@ footer {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-bottom: 100px;
   }
   .show-rating {
     flex-direction: column;
@@ -452,6 +453,7 @@ footer {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-bottom: 100px;
   }
   .show-origin {
     width: 100%;

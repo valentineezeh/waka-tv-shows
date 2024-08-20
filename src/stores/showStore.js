@@ -18,6 +18,7 @@ const apiUrl = "https://api.tvmaze.com"
 const persistedSelectedShow = getCachedData(CACHE_KEY_SELECTED_SHOWS);
 
 export const useShowStore = defineStore("showStore", () => {
+  // refactor note instead of using ref I should use reactive.
   const shows = ref([]);
   const searchedShows = ref([]);
   const searchQuery = ref("");
@@ -33,7 +34,7 @@ export const useShowStore = defineStore("showStore", () => {
 
   const fetchShows = async (query = "") => {
     try {
-      if (query) {
+      if (query.trim().length !== 0) {
         isSearching.value = true;
         searchError.value = null;
 
@@ -101,8 +102,22 @@ export const useShowStore = defineStore("showStore", () => {
     }, {});
   });
 
+  const sortedAndGroupedShows = computed(() => {
+  const groupedShows = filteredAndGroupedShows.value;
+
+  for (const genre in groupedShows) {
+    groupedShows[genre].sort((a, b) => {
+      const ratingA = a.rating ? a.rating.average : 0;
+      const ratingB = b.rating ? b.rating.average : 0;
+      return ratingB - ratingA;
+    });
+  }
+
+  return groupedShows;
+});
+
   const hasResults = computed(() =>
-    Object.values(filteredAndGroupedShows.value).some(
+    Object.values(sortedAndGroupedShows.value).some(
       (shows) => shows.length > 0,
     ),
   );
@@ -136,7 +151,6 @@ export const useShowStore = defineStore("showStore", () => {
     error,
     setSelectedShow,
     hasResults,
-    filteredAndGroupedShows,
     debouncedFetchShows,
     searchQuery,
     setSearchQuery,
@@ -145,6 +159,7 @@ export const useShowStore = defineStore("showStore", () => {
     isSearching,
     getSelectedShow,
     isFetchingShowDetails,
-    showDetailsError
+    showDetailsError,
+    sortedAndGroupedShows
   };
 });
