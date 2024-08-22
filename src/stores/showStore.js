@@ -27,7 +27,6 @@ export const useShowStore = defineStore("showStore", () => {
   const selectSearchedShow = ref(null);
   const isSearching = ref(false);
   const searchError = ref(null);
-  const isFetchingShowDetails = ref(false);
   const showDetailsError = ref(null);
 
   const fetchShows = async (query = "") => {
@@ -130,7 +129,6 @@ export const useShowStore = defineStore("showStore", () => {
 
   const getSelectedShow = async (id) => {
     try {
-      isFetchingShowDetails.value = true;
       const checkCachedData = persistedSelectedShow ? persistedSelectedShow.data.id : 0
       if(checkCachedData === Number(id)){
         return persistedSelectedShow.data
@@ -144,8 +142,6 @@ export const useShowStore = defineStore("showStore", () => {
       }
     } catch (error) {
       showDetailsError.value = error.message || "Error fetching show details.";
-    } finally {
-      isFetchingShowDetails.value = false;
     }
   };
 
@@ -165,7 +161,6 @@ export const useShowStore = defineStore("showStore", () => {
     setSelectSearchedShow,
     isSearching,
     getSelectedShow,
-    isFetchingShowDetails,
     showDetailsError,
     sortedAndGroupedShows,
   };
