@@ -17,15 +17,15 @@ defineProps({
 <template>
   <div>
     <div v-show="hasResults">
-    <div
-      v-for="(shows, genre) in sortedAndGroupedShows"
-      :key="genre"
-      class="segment"
-    >
-      <h3>{{ genre }}</h3>
-      <ShowListings :shows="shows" />
+      <div
+        v-for="(shows, genre) in sortedAndGroupedShows"
+        :key="genre"
+        class="segment"
+      >
+        <h3>{{ genre }}</h3>
+        <ShowListings :shows="shows" />
+      </div>
     </div>
-  </div>
     <NotFound v-show="!hasResults" />
   </div>
 </template>

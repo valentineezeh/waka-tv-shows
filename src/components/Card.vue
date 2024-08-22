@@ -1,6 +1,6 @@
 <script setup>
 import { truncate } from "@/utils";
-import { RouterLink, useRouter } from "vue-router";
+import { RouterLink } from "vue-router";
 import Button from "@/components/Button.vue";
 import { useShowStore } from "@/stores/showStore";
 
@@ -24,7 +24,6 @@ const props = defineProps({
 });
 
 const { setSelectedShow } = useShowStore();
-const router = useRouter();
 
 const handleViewDetails = () => {
   setSelectedShow(props.show);

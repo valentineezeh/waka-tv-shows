@@ -1,9 +1,20 @@
-import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "@/views/HomeView.vue";
-import ShowView from "@/views/ShowView.vue";
+import {
+  createRouter,
+  createWebHistory,
+  createMemoryHistory,
+} from "vue-router";
+
+const HomeView = () => import("@/views/HomeView.vue");
+const ShowView = () => import("@/views/ShowView.vue");
+
+// for SSR rendering
+const isServer =
+  typeof window === "undefined"
+    ? createMemoryHistory(import.meta.env.BASE_URL)
+    : createWebHistory(import.meta.env.BASE_URL);
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: isServer,
   routes: [
     {
       path: "/",

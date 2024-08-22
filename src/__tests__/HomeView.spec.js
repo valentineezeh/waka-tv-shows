@@ -10,7 +10,7 @@ import { createPinia, setActivePinia } from "pinia";
 import HomeView from "@/views/HomeView.vue";
 import ShowView from "@/views/ShowView.vue";
 import { createRouter, createWebHistory } from "vue-router";
-import { shows } from '@/mock'
+import { shows } from "@/mock";
 
 describe("HomeView", () => {
   let store;
@@ -61,7 +61,7 @@ describe("HomeView", () => {
   });
 
   it("renders Error component when error is present", async () => {
-    store.error = 'Error has occurred';
+    store.error = "Error has occurred";
     store.isLoading = false;
 
     const wrapper = mount(HomeView, {

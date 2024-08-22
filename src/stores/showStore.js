@@ -12,8 +12,8 @@ const CACHE_EXPIRATION_TIME = 24 * 60 * 60 * 1000;
 const CACHE_KEY_All_SHOWS = "allShows";
 const CACHE_KEY = "shows";
 const CACHE_KEY_SELECTED_SHOWS = "selectedShow";
-const CACHE_KEY_SELECTED_SEARCH_SHOW = "selectedSearchShow"
-const apiUrl = "https://api.tvmaze.com"
+const CACHE_KEY_SELECTED_SEARCH_SHOW = "selectedSearchShow";
+const apiUrl = "https://api.tvmaze.com";
 
 const persistedSelectedShow = getCachedData(CACHE_KEY_SELECTED_SHOWS);
 
@@ -29,8 +29,8 @@ export const useShowStore = defineStore("showStore", () => {
   const selectSearchedShow = ref(null);
   const isSearching = ref(false);
   const searchError = ref(null);
-  const isFetchingShowDetails = ref(false)
-  const showDetailsError = ref(null)
+  const isFetchingShowDetails = ref(false);
+  const showDetailsError = ref(null);
 
   const fetchShows = async (query = "") => {
     try {
@@ -103,18 +103,18 @@ export const useShowStore = defineStore("showStore", () => {
   });
 
   const sortedAndGroupedShows = computed(() => {
-  const groupedShows = filteredAndGroupedShows.value;
+    const groupedShows = filteredAndGroupedShows.value;
 
-  for (const genre in groupedShows) {
-    groupedShows[genre].sort((a, b) => {
-      const ratingA = a.rating ? a.rating.average : 0;
-      const ratingB = b.rating ? b.rating.average : 0;
-      return ratingB - ratingA;
-    });
-  }
+    for (const genre in groupedShows) {
+      groupedShows[genre].sort((a, b) => {
+        const ratingA = a.rating ? a.rating.average : 0;
+        const ratingB = b.rating ? b.rating.average : 0;
+        return ratingB - ratingA;
+      });
+    }
 
-  return groupedShows;
-});
+    return groupedShows;
+  });
 
   const hasResults = computed(() =>
     Object.values(sortedAndGroupedShows.value).some(
@@ -128,17 +128,17 @@ export const useShowStore = defineStore("showStore", () => {
   };
 
   const getSelectedShow = async (id) => {
-    isFetchingShowDetails.value = true
+    isFetchingShowDetails.value = true;
     try {
       const res = await fetchFromAPI(
-        `${apiUrl}/search/shows/${id}`,
+        `https://cors-anywhere.herokuapp.com/${apiUrl}/search/shows/${id}`,
       );
       selectedSearchedShow.value = res;
-      isFetchingShowDetails.value = false
+      isFetchingShowDetails.value = false;
       cacheData(res, CACHE_KEY_SELECTED_SHOWS);
     } catch (error) {
-      isFetchingShowDetails.value = false
-      showDetailsError.value = error.message || 'Error fetching show details.'
+      isFetchingShowDetails.value = false;
+      showDetailsError.value = error.message || "Error fetching show details.";
     }
   };
 
@@ -160,6 +160,6 @@ export const useShowStore = defineStore("showStore", () => {
     getSelectedShow,
     isFetchingShowDetails,
     showDetailsError,
-    sortedAndGroupedShows
+    sortedAndGroupedShows,
   };
 });

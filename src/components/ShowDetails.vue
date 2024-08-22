@@ -1,13 +1,13 @@
 <script setup>
-import { onMounted, computed } from 'vue';
+import { onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
 import Button from "@/components/Button.vue";
 import { stripTags, defaultImg } from "@/utils";
 import NotFound from "./NotFound.vue";
-import { useShowStore } from '@/stores/showStore'
+import { useShowStore } from "@/stores/showStore";
 
 const router = useRoute();
-const useStore = useShowStore()
+const useStore = useShowStore();
 
 const props = defineProps({
   show: {
@@ -17,33 +17,34 @@ const props = defineProps({
 });
 
 const openExternalSite = () => {
-  const externalUrl = props.show.officialSite;
-  window.open(externalUrl, "_blank");
+  if (typeof window !== "undefined") {
+    const externalUrl = props.show.officialSite;
+    window.open(externalUrl, "_blank");
+  }
 };
 
 onMounted(async () => {
-  if (!useStore.selectedShow){
-    const showId = router.query.id
-    await useStore.getSelectedShow(showId)
+  if (!useStore.selectedShow) {
+    const showId = router.query.id;
+    await useStore.getSelectedShow(showId);
   }
-})
+});
 
 const formattedSelectedShow = computed(() => {
   return {
     ...props.show,
-    name: props.show ? props.show.name : 'Not available',
+    name: props.show ? props.show.name : "Not available",
     rating: props.show ? props.show.rating : 0,
-    language: props.show ? props.show.language : 'Not available',
-    officialSite: props.show ? props.show.officialSite : 'Not available',
-    summary: props.show ? props.show.summary : 'Not available',
-    genres: props.show ? props.show.genres : ['Not available'],
-    premiered: props.show ? props.show.premiered : 'Not available',
+    language: props.show ? props.show.language : "Not available",
+    officialSite: props.show ? props.show.officialSite : "Not available",
+    summary: props.show ? props.show.summary : "Not available",
+    genres: props.show ? props.show.genres : ["Not available"],
+    premiered: props.show ? props.show.premiered : "Not available",
     image: {
-      original: props.show ? props.show.image.original : defaultImg
-    }
-  }
-})
-
+      original: props.show ? props.show.image.original : defaultImg,
+    },
+  };
+});
 </script>
 
 <template>
@@ -54,7 +55,7 @@ const formattedSelectedShow = computed(() => {
           <img :src="`${formattedSelectedShow.image.original}`" />
         </div>
       </div>
-      <div class="show-detail" >
+      <div class="show-detail">
         <div class="show-poster">
           <img :src="`${formattedSelectedShow.image.original}`" />
         </div>
@@ -63,7 +64,8 @@ const formattedSelectedShow = computed(() => {
           <div class="show-rating">
             <p>Rating: {{ formattedSelectedShow.rating.average }}</p>
             <p>Language: {{ formattedSelectedShow.language }}</p>
-            <Button :disabled="!formattedSelectedShow.officialSite"
+            <Button
+              :disabled="!formattedSelectedShow.officialSite"
               text="Watch on the official site"
               @click="openExternalSite"
             />

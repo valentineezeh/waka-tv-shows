@@ -117,7 +117,7 @@ export const sortedAndGroupedShows = {
       rating: { average: 9.1 },
     },
   ],
-   Drama: [
+  Drama: [
     {
       id: 1,
       name: "Show 1",
@@ -131,4 +131,4 @@ export const sortedAndGroupedShows = {
       rating: { average: 7.2 },
     },
   ],
-}
+};

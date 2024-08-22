@@ -4,7 +4,8 @@ import { useShowStore } from "@/stores/showStore";
 import Loader from "@/components/Loader.vue";
 import Error from "@/components/Error.vue";
 
-const { selectedShow, isFetchingShowDetails, showDetailsError } = useShowStore();
+const { selectedShow, isFetchingShowDetails, showDetailsError } =
+  useShowStore();
 </script>
 
 <template>

@@ -1,10 +1,10 @@
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 import { useShowStore } from "@/stores/showStore";
 import SearchResultCard from "@/components/SearchResultCard.vue";
 
 const useStore = useShowStore();
-const showSearchBar = ref(true)
+const showSearchBar = ref(true);
 
 const props = defineProps({
   modelValue: {
@@ -26,17 +26,12 @@ const handleFocusOut = () => {
 
 const handleFocus = () => {
   showSearchBar.value = true;
-}
+};
 </script>
 
 <template>
-  <div
-    class="search-input"
-    tabindex="0"
-    >
-    <div
-      class="input-container"
-      >
+  <div class="search-input" tabindex="0">
+    <div class="input-container">
       <input
         type="text"
         placeholder="Search TV shows.."

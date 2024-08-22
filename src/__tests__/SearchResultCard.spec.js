@@ -35,7 +35,7 @@ describe("SearchResultCard", () => {
     });
 
     expect(wrapper.exists).toBeTruthy();
-  })
+  });
 
   it("navigates to the show view when the button is clicked", async () => {
     const wrapper = mount(SearchResultCard, {
@@ -47,11 +47,11 @@ describe("SearchResultCard", () => {
       },
     });
 
-    const handleCLickSpy = vi.spyOn(wrapper.vm, 'handleCLick')
+    const handleCLickSpy = vi.spyOn(wrapper.vm, "handleCLick");
 
     const listItem = wrapper.findAll("li").at(0);
-    await listItem.trigger('click')
-    expect(handleCLickSpy).toHaveBeenCalled()
-    expect(handleCLickSpy).toHaveBeenCalledWith(shows[0])
+    await listItem.trigger("click");
+    expect(handleCLickSpy).toHaveBeenCalled();
+    expect(handleCLickSpy).toHaveBeenCalledWith(shows[0]);
   });
-})
+});

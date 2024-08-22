@@ -85,7 +85,7 @@ describe("ShowList", () => {
       },
     });
     await wrapper.setProps({ hasResults: false });
-    await wrapper.setProps({ sortedAndGroupedShows: {} })
+    await wrapper.setProps({ sortedAndGroupedShows: {} });
     expect(wrapper.findComponent(NotFound).exists()).toBe(true);
     expect(wrapper.findAllComponents(ShowListings)).toHaveLength(0);
   });
