@@ -6,6 +6,7 @@ import {
 
 const HomeView = () => import("@/views/HomeView.vue");
 const ShowView = () => import("@/views/ShowView.vue");
+const Layout = () => import ("@/views/Layout.vue")
 
 // for SSR rendering
 const isServer =
@@ -17,16 +18,23 @@ const router = createRouter({
   history: isServer,
   routes: [
     {
-      path: "/",
+      path: "",
       name: "home",
-      component: HomeView,
-    },
-    {
-      path: "/show",
-      name: "show",
-      component: ShowView,
-    },
-  ],
-});
+      component: Layout,
+      children: [
+        {
+          path: "/",
+          name: "home",
+          component: HomeView,
+        },
+        {
+          path: "/show",
+          name: "show",
+          component: ShowView,
+        }
+      ]
+    }
+      ]
+    });
 
 export default router;

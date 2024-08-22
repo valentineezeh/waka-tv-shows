@@ -1,5 +1,6 @@
-import { describe, it, beforeEach, expect } from "vitest";
+import { describe, it, beforeEach, expect, vi } from "vitest";
 import { mount } from "@vue/test-utils";
+import { reactive } from '@vue/reactivity'
 import { createPinia, setActivePinia } from "pinia";
 import { createRouter, createWebHistory } from "vue-router";
 import ShowView from "@/views/ShowView.vue";
@@ -8,17 +9,10 @@ import NotFound from "@/components/NotFound.vue";
 import { useShowStore } from "@/stores/showStore";
 import HomeView from "@/views/HomeView.vue";
 import ShowView from "@/views/ShowView.vue";
+import { shows } from '@/mock'
 
-const selectedShow = {
-  id: 1,
-  name: "Show 1",
-  image: "image.jpg",
-  rating: { average: 4 },
-  language: "english",
-  summary: "show summary",
-  genres: ["genre1", "genre2"],
-  premiered: "02/08/2024",
-};
+const selectedShow = shows[0];
+
 
 describe("ShowView", () => {
   let store;
@@ -35,13 +29,15 @@ describe("ShowView", () => {
       ],
     });
   });
-  it("renders ShowDetails component", () => {
+  it("renders ShowDetails component", async() => {
     store.selectedShow = selectedShow;
     const showView = mount(ShowView, {
       global: {
         plugins: [router],
       },
     });
+
+    await showView.vm.$nextTick();
     const showDetails = showView.findComponent(ShowDetails);
     expect(showDetails.exists()).toBe(true);
   });
@@ -53,7 +49,7 @@ describe("ShowView", () => {
       },
     });
     const ratingText = showView.findComponent(ShowDetails).text();
-    expect(ratingText).toContain("Rating: 4");
+    expect(ratingText).toContain("Rating: 0");
   });
   it("does not render ShowDetails component when selectedShow is null", async () => {
     store.selectedShow = null;

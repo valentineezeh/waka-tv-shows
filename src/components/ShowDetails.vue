@@ -1,13 +1,9 @@
 <script setup>
-import { onMounted, computed } from "vue";
-import { useRoute } from "vue-router";
+import { computed } from "vue";
 import Button from "@/components/Button.vue";
 import { stripTags, defaultImg } from "@/utils";
 import NotFound from "./NotFound.vue";
-import { useShowStore } from "@/stores/showStore";
 
-const router = useRoute();
-const useStore = useShowStore();
 
 const props = defineProps({
   show: {
@@ -23,28 +19,27 @@ const openExternalSite = () => {
   }
 };
 
-onMounted(async () => {
-  if (!useStore.selectedShow) {
-    const showId = router.query.id;
-    await useStore.getSelectedShow(showId);
-  }
-});
 
 const formattedSelectedShow = computed(() => {
+  const { image, rating, genres, name, language, officialSite, summary, premiered } = props.show || {};
+
   return {
     ...props.show,
-    name: props.show ? props.show.name : "Not available",
-    rating: props.show ? props.show.rating : 0,
-    language: props.show ? props.show.language : "Not available",
-    officialSite: props.show ? props.show.officialSite : "Not available",
-    summary: props.show ? props.show.summary : "Not available",
-    genres: props.show ? props.show.genres : ["Not available"],
-    premiered: props.show ? props.show.premiered : "Not available",
+    name: name ?? "Not available",
+    rating: {
+      average: rating?.average ?? 0,
+    },
+    language: language ?? "Not available",
+    officialSite: officialSite ?? "Not available",
+    summary: summary ?? "Not available",
+    genres: genres ?? [],
+    premiered: premiered ?? "Not available",
     image: {
-      original: props.show ? props.show.image.original : defaultImg,
+      original: image?.original ?? defaultImg,
     },
   };
 });
+
 </script>
 
 <template>

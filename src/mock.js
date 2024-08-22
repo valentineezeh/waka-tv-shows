@@ -37,6 +37,7 @@ export const shows = [
     name: "Show 1",
     image: {
       medium: "https://example.com/show1.jpg",
+      original: "https://example.com/show1.jpg",
     },
     rating: { average: 5 },
     language: "english",

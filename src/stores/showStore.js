@@ -10,7 +10,6 @@ import {
 
 const CACHE_EXPIRATION_TIME = 24 * 60 * 60 * 1000;
 const CACHE_KEY_All_SHOWS = "allShows";
-const CACHE_KEY = "shows";
 const CACHE_KEY_SELECTED_SHOWS = "selectedShow";
 const CACHE_KEY_SELECTED_SEARCH_SHOW = "selectedSearchShow";
 const apiUrl = "https://api.tvmaze.com";
@@ -22,8 +21,7 @@ export const useShowStore = defineStore("showStore", () => {
   const shows = ref([]);
   const searchedShows = ref([]);
   const searchQuery = ref("");
-  const selectedSearchedShow = ref(null);
-  const selectedShow = ref(persistedSelectedShow);
+  const selectedShow = ref(null);
   const isLoading = ref(false);
   const error = ref(null);
   const selectSearchedShow = ref(null);
@@ -38,21 +36,24 @@ export const useShowStore = defineStore("showStore", () => {
         isSearching.value = true;
         searchError.value = null;
 
+        const queryInput = query.trim()
         const cachedData = getCachedData(CACHE_KEY_SELECTED_SEARCH_SHOW);
+        const checkIfQueryExist = cachedData && cachedData.data.some(obj => obj.name.toLowerCase() === queryInput);
+
 
         if (
           cachedData &&
-          cacheData.data === query &&
+          checkIfQueryExist &&
           !isCacheExpired(cachedData.timestamp, CACHE_EXPIRATION_TIME)
         ) {
           searchedShows.value = cachedData.data;
         } else {
           const searchResults = await fetchFromAPI(
-            `${apiUrl}/search/shows?q=${query}`,
+            `${apiUrl}/search/shows?q=${queryInput}`,
           );
           const shows = searchResults.map((item) => item.show);
           searchedShows.value = shows;
-          cacheData(shows, CACHE_KEY);
+          cacheData(shows, CACHE_KEY_SELECTED_SEARCH_SHOW);
         }
       } else {
         isLoading.value = true;
@@ -87,7 +88,7 @@ export const useShowStore = defineStore("showStore", () => {
 
   const setSelectedShow = (show) => {
     selectedShow.value = show;
-    localStorage.setItem(CACHE_KEY_SELECTED_SHOWS, JSON.stringify(show));
+    cacheData(show, CACHE_KEY_SELECTED_SHOWS);
   };
 
   const filteredAndGroupedShows = computed(() => {
@@ -128,17 +129,23 @@ export const useShowStore = defineStore("showStore", () => {
   };
 
   const getSelectedShow = async (id) => {
-    isFetchingShowDetails.value = true;
     try {
-      const res = await fetchFromAPI(
-        `https://cors-anywhere.herokuapp.com/${apiUrl}/search/shows/${id}`,
-      );
-      selectedSearchedShow.value = res;
-      isFetchingShowDetails.value = false;
-      cacheData(res, CACHE_KEY_SELECTED_SHOWS);
+      isFetchingShowDetails.value = true;
+      const checkCachedData = persistedSelectedShow ? persistedSelectedShow.data.id : 0
+      if(checkCachedData === Number(id)){
+        return persistedSelectedShow.data
+      } else {
+        const res = await fetchFromAPI(
+          `${apiUrl}/shows/${id}`,
+        );
+
+      setSelectedShow(res)
+      return res;
+      }
     } catch (error) {
-      isFetchingShowDetails.value = false;
       showDetailsError.value = error.message || "Error fetching show details.";
+    } finally {
+      isFetchingShowDetails.value = false;
     }
   };
 

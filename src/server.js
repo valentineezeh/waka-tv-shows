@@ -39,7 +39,7 @@ const initServer = async () => {
 };
 
 initServer().then((app) =>
-  app.listen(5000, () => {
-    console.log("Server is listening at port 5000...");
+  app.listen(7000, () => {
+    console.log("Server is listening at port 7000...");
   }),
 );
