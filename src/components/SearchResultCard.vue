@@ -1,24 +1,24 @@
 <script setup>
 import { computed } from "vue";
-import { useShowStore } from "@/stores/showStore";
+import { useShowStoreReactive } from '@/stores/reactiveShowStore'
 import { useRouter } from "vue-router";
 import { defaultImg } from "@/utils";
 
 const router = useRouter();
-const useStore = useShowStore();
+const useStore = useShowStoreReactive();
 const props = defineProps({
   searchedShows: {
     type: Array,
   },
   showSearchBar: {
-    type: Boolean
-  }
+    type: Boolean,
+  },
 });
 
 const handleCLick = (show) => {
   useStore.setSelectedShow(show);
   router.push({ path: "/show", query: { id: show.id } });
-  useStore.setSearchQuery('');
+  useStore.setSearchQuery("");
 };
 
 const formattedShows = computed(() => {
@@ -30,7 +30,10 @@ const formattedShows = computed(() => {
 </script>
 
 <template>
-  <div class="searchCardContainer" v-show="formattedShows.length !== 0 && showSearchBar">
+  <div
+    class="searchCardContainer"
+    v-show="formattedShows.length !== 0 && showSearchBar"
+  >
     <ul
       v-for="show in formattedShows"
       :key="`show-${show.id}`"

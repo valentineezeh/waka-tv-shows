@@ -1,11 +1,11 @@
 <script setup>
 import SearchBar from "@/components/SearchBar.vue";
 import ShowList from "@/components/ShowList.vue";
-import { useShowStore } from "@/stores/showStore";
 import Loader from "@/components/Loader.vue";
 import Error from "@/components/Error.vue";
+import { useShowStoreReactive } from '@/stores/reactiveShowStore'
 
-const useStore = useShowStore();
+const useStore = useShowStoreReactive()
 </script>
 
 <template>
@@ -14,12 +14,12 @@ const useStore = useShowStore();
       <h3>Popular Shows</h3>
       <SearchBar v-model="useStore.searchQuery" />
     </div>
-    <Loader v-if="useStore.isLoading" />
-    <Error v-else-if="useStore.error" :message="useStore.error" />
+    <Loader v-show="useStore.isLoading" />
     <ShowList
-      v-else
-      :filteredAndGroupedShows="useStore.filteredAndGroupedShows"
+      v-if="useStore.sortedAndGroupedShows"
+      :sortedAndGroupedShows="useStore.sortedAndGroupedShows"
       :hasResults="useStore.hasResults"
     />
+    <Error v-show="useStore.error" :message="useStore.error" />
   </div>
 </template>

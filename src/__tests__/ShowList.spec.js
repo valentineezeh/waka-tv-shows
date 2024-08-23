@@ -3,7 +3,7 @@ import { mount } from "@vue/test-utils";
 import ShowList from "@/components/ShowList.vue";
 import ShowListings from "@/components/ShowListings.vue";
 import NotFound from "@/components/NotFound.vue";
-import { filteredAndGroupedShows } from "@/mock";
+import { filteredAndGroupedShows, sortedAndGroupedShows } from "@/mock";
 import { createRouter, createWebHistory } from "vue-router";
 import { createPinia, setActivePinia } from "pinia";
 import HomeView from "@/views/HomeView.vue";
@@ -27,7 +27,7 @@ describe("ShowList", () => {
   it("renders ShowListings components for each genre", () => {
     wrapper = mount(ShowList, {
       props: {
-        filteredAndGroupedShows,
+        sortedAndGroupedShows,
         hasResults: true,
       },
       global: {
@@ -42,14 +42,14 @@ describe("ShowList", () => {
     const showListingsComponents = wrapper.findAllComponents(ShowListings);
 
     expect(showListingsComponents).toHaveLength(
-      Object.keys(filteredAndGroupedShows).length,
+      Object.keys(sortedAndGroupedShows).length,
     );
   });
 
   it("passes the correct shows prop to ShowListings components", () => {
     wrapper = mount(ShowList, {
       props: {
-        filteredAndGroupedShows,
+        sortedAndGroupedShows,
         hasResults: true,
       },
       global: {
@@ -64,8 +64,8 @@ describe("ShowList", () => {
     const showListingsComponents = wrapper.findAllComponents(ShowListings);
 
     showListingsComponents.forEach((showListings, index) => {
-      const genre = Object.keys(filteredAndGroupedShows)[index];
-      const shows = filteredAndGroupedShows[genre];
+      const genre = Object.keys(sortedAndGroupedShows)[index];
+      const shows = sortedAndGroupedShows[genre];
       expect(showListings.props("shows")).toEqual(shows);
     });
   });
@@ -73,7 +73,7 @@ describe("ShowList", () => {
   it("renders NotFound component when hasResults is false", async () => {
     wrapper = mount(ShowList, {
       props: {
-        filteredAndGroupedShows,
+        sortedAndGroupedShows,
         hasResults: true,
       },
       global: {
@@ -85,6 +85,7 @@ describe("ShowList", () => {
       },
     });
     await wrapper.setProps({ hasResults: false });
+    await wrapper.setProps({ sortedAndGroupedShows: {} });
     expect(wrapper.findComponent(NotFound).exists()).toBe(true);
     expect(wrapper.findAllComponents(ShowListings)).toHaveLength(0);
   });

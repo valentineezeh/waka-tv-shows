@@ -3,7 +3,7 @@ import ShowListings from "./ShowListings.vue";
 import NotFound from "./NotFound.vue";
 
 defineProps({
-  filteredAndGroupedShows: {
+  sortedAndGroupedShows: {
     type: Object,
     required: true,
   },
@@ -15,15 +15,17 @@ defineProps({
 </script>
 
 <template>
-  <div v-if="hasResults">
-    <div
-      v-for="(shows, genre) in filteredAndGroupedShows"
-      :key="genre"
-      class="segment"
-    >
-      <h3>{{ genre }}</h3>
-      <ShowListings :shows="shows" />
+  <div>
+    <div v-show="hasResults">
+      <div
+        v-for="(shows, genre) in sortedAndGroupedShows"
+        :key="genre"
+        class="segment"
+      >
+        <h3>{{ genre }}</h3>
+        <ShowListings :shows="shows" />
+      </div>
     </div>
+    <NotFound v-show="!hasResults" />
   </div>
-  <NotFound v-else />
 </template>

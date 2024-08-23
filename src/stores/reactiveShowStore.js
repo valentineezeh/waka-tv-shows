@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
-import { debounce } from "throttle-debounce";
+import { computed, reactive, toRefs, ref } from "vue";
 import {
   fetchFromAPI,
   cacheData,
@@ -16,47 +15,49 @@ const apiUrl = "https://api.tvmaze.com";
 
 const persistedSelectedShow = getCachedData(CACHE_KEY_SELECTED_SHOWS);
 
-export const useShowStore = defineStore("showStore", () => {
-  // refactor note instead of using ref I should use reactive.
-  const shows = ref([]);
-  const searchedShows = ref([]);
-  const searchQuery = ref("");
-  const selectedShow = ref(null);
-  const isLoading = ref(false);
-  const error = ref(null);
-  const selectSearchedShow = ref(null);
-  const isSearching = ref(false);
-  const searchError = ref(null);
-  const showDetailsError = ref(null);
+export const useShowStoreReactive = defineStore("showStore", () => {
+  const state = reactive({
+    shows: [],
+    searchedShows: [],
+    searchQuery: "",
+    selectedShow: null,
+    isLoading: false,
+    error: null,
+    selectSearchedShow: null,
+    isSearching: false,
+    searchError: null,
+    showDetailsError: null,
+  });
 
   const fetchShows = async (query = "") => {
     try {
       if (query.trim().length !== 0) {
-        isSearching.value = true;
-        searchError.value = null;
+        state.isSearching = true;
+        state.searchError = null;
 
-        const queryInput = query.trim()
+        const queryInput = query.trim();
         const cachedData = getCachedData(CACHE_KEY_SELECTED_SEARCH_SHOW);
-        const checkIfQueryExist = cachedData && cachedData.data.some(obj => obj.name.toLowerCase() === queryInput);
-
+        const checkIfQueryExist =
+          cachedData &&
+          cachedData.data.some((obj) => obj.name.toLowerCase() === queryInput);
 
         if (
           cachedData &&
           checkIfQueryExist &&
           !isCacheExpired(cachedData.timestamp, CACHE_EXPIRATION_TIME)
         ) {
-          searchedShows.value = cachedData.data;
+          state.searchedShows = cachedData.data;
         } else {
           const searchResults = await fetchFromAPI(
-            `${apiUrl}/search/shows?q=${queryInput}`,
+            `${apiUrl}/search/shows?q=${queryInput}`
           );
           const shows = searchResults.map((item) => item.show);
-          searchedShows.value = shows;
+          state.searchedShows = shows;
           cacheData(shows, CACHE_KEY_SELECTED_SEARCH_SHOW);
         }
       } else {
-        isLoading.value = true;
-        error.value = null;
+        state.isLoading = true;
+        state.error = null;
         const cachedData = getCachedData(CACHE_KEY_All_SHOWS);
 
         if (
@@ -64,34 +65,46 @@ export const useShowStore = defineStore("showStore", () => {
           isCacheExpired(cachedData.timestamp, CACHE_EXPIRATION_TIME)
         ) {
           const allShows = await fetchFromAPI(`${apiUrl}/shows`);
-          shows.value = allShows;
+          state.shows = allShows;
           cacheData(allShows, CACHE_KEY_All_SHOWS);
         } else {
-          shows.value = cachedData.data;
+          state.shows = cachedData.data;
         }
       }
     } catch (error) {
-      error.value = error.message || "Error fetching shows";
-      searchError.value = error.message;
+      state.error = error.message || "Error fetching shows";
+      state.searchError = error.message;
     } finally {
-      isLoading.value = false;
-      isSearching.value = false;
+      state.isLoading = false;
+      state.isSearching = false;
     }
   };
 
-  const debouncedFetchShows = debounce(700, fetchShows);
+
+const debounce = (delay, fn) => {
+  const timeout = ref(null);
+
+  return (...args) => {
+    clearTimeout(timeout.value);
+    timeout.value = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  };
+};
+
+const debouncedFetchShows = debounce(700, fetchShows);
 
   const setSearchQuery = (query) => {
-    searchQuery.value = query;
+    state.searchQuery = query;
   };
 
   const setSelectedShow = (show) => {
-    selectedShow.value = show;
+    state.selectedShow = show;
     cacheData(show, CACHE_KEY_SELECTED_SHOWS);
   };
 
   const filteredAndGroupedShows = computed(() => {
-    return shows.value.reduce((grouped, show) => {
+    return state.shows.reduce((grouped, show) => {
       show.genres.forEach((genre) => {
         if (!grouped[genre]) {
           grouped[genre] = [];
@@ -118,50 +131,47 @@ export const useShowStore = defineStore("showStore", () => {
 
   const hasResults = computed(() =>
     Object.values(sortedAndGroupedShows.value).some(
-      (shows) => shows.length > 0,
-    ),
+      (shows) => shows.length > 0
+    )
   );
 
   const setSelectSearchedShow = (show) => {
-    selectSearchedShow.value = show;
+    state.selectSearchedShow = show;
     cacheData(show, CACHE_KEY_SELECTED_SEARCH_SHOW);
   };
 
   const getSelectedShow = async (id) => {
     try {
-      const checkCachedData = persistedSelectedShow ? persistedSelectedShow.data.id : 0
-      if(checkCachedData === Number(id)){
-        return persistedSelectedShow.data
+      const checkCachedData =
+        persistedSelectedShow?.data?.id === Number(id)
+          ? persistedSelectedShow.data
+          : null;
+      if (checkCachedData) {
+        return checkCachedData;
       } else {
-        const res = await fetchFromAPI(
-          `${apiUrl}/shows/${id}`,
-        );
-
-      setSelectedShow(res)
-      return res;
+        state.isLoading = true
+        const res = await fetchFromAPI(`${apiUrl}/shows/${id}`);
+        setSelectedShow(res);
+        return res;
       }
     } catch (error) {
-      showDetailsError.value = error.message || "Error fetching show details.";
+      state.showDetailsError =
+        error.message || "Error fetching show details.";
+    } finally{
+      state.isLoading = false
     }
   };
 
   fetchShows("");
 
   return {
-    shows,
-    selectedShow,
-    isLoading,
-    error,
+    ...toRefs(state),
+    debouncedFetchShows,
+    setSearchQuery,
     setSelectedShow,
     hasResults,
-    debouncedFetchShows,
-    searchQuery,
-    setSearchQuery,
-    searchedShows,
     setSelectSearchedShow,
-    isSearching,
     getSelectedShow,
-    showDetailsError,
     sortedAndGroupedShows,
   };
 });

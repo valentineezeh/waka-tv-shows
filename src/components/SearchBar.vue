@@ -1,10 +1,10 @@
 <script setup>
-import { ref } from 'vue'
-import { useShowStore } from "@/stores/showStore";
+import { ref } from "vue";
+import { useShowStoreReactive } from '@/stores/reactiveShowStore'
 import SearchResultCard from "@/components/SearchResultCard.vue";
 
-const useStore = useShowStore();
-const showSearchBar = ref(true)
+const useStore = useShowStoreReactive();
+const showSearchBar = ref(true);
 
 const props = defineProps({
   modelValue: {
@@ -26,17 +26,12 @@ const handleFocusOut = () => {
 
 const handleFocus = () => {
   showSearchBar.value = true;
-}
+};
 </script>
 
 <template>
-  <div
-    class="search-input"
-    tabindex="0"
-    >
-    <div
-      class="input-container"
-      >
+  <div class="search-input" tabindex="0">
+    <div class="input-container">
       <input
         type="text"
         placeholder="Search TV shows.."
@@ -46,10 +41,10 @@ const handleFocus = () => {
         @focus="handleFocus"
         @focusout="handleFocusOut"
       />
-      <div class="input-loader" v-if="useStore.isSearching" />
+      <div class="input-loader" v-show="useStore.isSearching" />
     </div>
     <SearchResultCard
-      v-if="useStore.searchQuery.length !== 0"
+      v-show="useStore.searchQuery.trim().length !== 0"
       :searchedShows="useStore.searchedShows"
       :showSearchBar="showSearchBar"
       @pointerdown.prevent

@@ -8,7 +8,7 @@ defineProps({
   },
   disabled: {
     type: Boolean,
-  }
+  },
 });
 </script>
 

@@ -37,12 +37,14 @@ export const shows = [
     name: "Show 1",
     image: {
       medium: "https://example.com/show1.jpg",
+      original: "https://example.com/show1.jpg",
     },
     rating: { average: 5 },
     language: "english",
     summary: "show summary",
     genres: ["genre1", "genre2"],
     premiered: "02/08/2024",
+    formattedRuntime: "0 mins",
   },
   {
     id: 2,
@@ -89,7 +91,6 @@ export const filteredAndGroupedShows = {
       name: "Show 1",
       image: { medium: "https://example.com/show1.jpg" },
       rating: { average: 8.5 },
-      // other show properties
     },
     {
       id: 2,
@@ -104,6 +105,31 @@ export const filteredAndGroupedShows = {
       name: "Show 3",
       image: { medium: "https://example.com/show3.jpg" },
       rating: { average: 9.1 },
+    },
+  ],
+};
+
+export const sortedAndGroupedShows = {
+  Comedy: [
+    {
+      id: 3,
+      name: "Show 3",
+      image: { medium: "https://example.com/show3.jpg" },
+      rating: { average: 9.1 },
+    },
+  ],
+  Drama: [
+    {
+      id: 1,
+      name: "Show 1",
+      image: { medium: "https://example.com/show1.jpg" },
+      rating: { average: 8.5 },
+    },
+    {
+      id: 2,
+      name: "Show 2",
+      image: { medium: "https://example.com/show2.jpg" },
+      rating: { average: 7.2 },
     },
   ],
 };
