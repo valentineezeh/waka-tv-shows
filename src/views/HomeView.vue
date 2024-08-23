@@ -15,11 +15,11 @@ const useStore = useShowStoreReactive()
       <SearchBar v-model="useStore.searchQuery" />
     </div>
     <Loader v-show="useStore.isLoading" />
-    <Error v-show="useStore.error" :message="useStore.error" />
     <ShowList
-      v-show="useStore.sortedAndGroupedShows"
+      v-if="useStore.sortedAndGroupedShows"
       :sortedAndGroupedShows="useStore.sortedAndGroupedShows"
       :hasResults="useStore.hasResults"
     />
+    <Error v-show="useStore.error" :message="useStore.error" />
   </div>
 </template>
