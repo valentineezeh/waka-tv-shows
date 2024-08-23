@@ -2,28 +2,27 @@
 import { onMounted, reactive } from 'vue'
 import { useRoute } from "vue-router";
 import ShowDetails from "@/components/ShowDetails.vue";
-import { useShowStore } from "@/stores/showStore";
+import { useShowStoreReactive } from '@/stores/reactiveShowStore'
 import Loader from "@/components/Loader.vue";
 import Error from "@/components/Error.vue";
 
 const router = useRoute();
 const state = reactive({
   show: {},
-  isLoading: false
 })
 
 const {
   showDetailsError,
-  getSelectedShow
-} = useShowStore();
+  getSelectedShow,
+  isLoading
+} = useShowStoreReactive();
 const showId = router.query.id;
 
 onMounted(async () => {
   if (!isNaN(showId)) {
-    state.isLoading = true;
-    const res = await getSelectedShow(showId);
-    state.show = res
-    state.isLoading = false;
+    console.log('i got in here')
+    const data = await getSelectedShow(showId);
+    state.show = data
   }
 });
 
@@ -32,7 +31,7 @@ onMounted(async () => {
 <template>
   <section>
     <div>
-      <Loader v-show="state.isLoading" />
+      <Loader v-show="isLoading" />
       <Error v-show="showDetailsError" :message="showDetailsError" />
       <ShowDetails v-show="state.show" :show="state.show" />
     </div>

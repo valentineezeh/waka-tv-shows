@@ -30,7 +30,7 @@ const formattedSelectedShow = computed(() => {
       average: rating?.average ?? 0,
     },
     language: language ?? "Not available",
-    officialSite: officialSite ?? "Not available",
+    officialSite: officialSite ?? null,
     summary: summary ?? "Not available",
     genres: genres ?? [],
     premiered: premiered ?? "Not available",

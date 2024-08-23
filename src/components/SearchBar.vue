@@ -1,9 +1,9 @@
 <script setup>
 import { ref } from "vue";
-import { useShowStore } from "@/stores/showStore";
+import { useShowStoreReactive } from '@/stores/reactiveShowStore'
 import SearchResultCard from "@/components/SearchResultCard.vue";
 
-const useStore = useShowStore();
+const useStore = useShowStoreReactive();
 const showSearchBar = ref(true);
 
 const props = defineProps({

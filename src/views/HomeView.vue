@@ -1,11 +1,11 @@
 <script setup>
 import SearchBar from "@/components/SearchBar.vue";
 import ShowList from "@/components/ShowList.vue";
-import { useShowStore } from "@/stores/showStore";
 import Loader from "@/components/Loader.vue";
 import Error from "@/components/Error.vue";
+import { useShowStoreReactive } from '@/stores/reactiveShowStore'
 
-const useStore = useShowStore();
+const useStore = useShowStoreReactive()
 </script>
 
 <template>
