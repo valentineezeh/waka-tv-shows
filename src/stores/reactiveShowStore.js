@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
-import { computed, reactive, toRefs } from "vue";
-import { debounce } from "throttle-debounce";
+import { computed, reactive, toRefs, ref } from "vue";
 import {
   fetchFromAPI,
   cacheData,
@@ -81,7 +80,19 @@ export const useShowStoreReactive = defineStore("showStore", () => {
     }
   };
 
-  const debouncedFetchShows = debounce(700, fetchShows);
+
+const debounce = (delay, fn) => {
+  const timeout = ref(null);
+
+  return (...args) => {
+    clearTimeout(timeout.value);
+    timeout.value = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  };
+};
+
+const debouncedFetchShows = debounce(700, fetchShows);
 
   const setSearchQuery = (query) => {
     state.searchQuery = query;

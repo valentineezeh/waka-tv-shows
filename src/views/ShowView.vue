@@ -20,7 +20,6 @@ const showId = router.query.id;
 
 onMounted(async () => {
   if (!isNaN(showId)) {
-    console.log('i got in here')
     const data = await getSelectedShow(showId);
     state.show = data
   }
