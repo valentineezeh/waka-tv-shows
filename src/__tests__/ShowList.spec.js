@@ -7,7 +7,7 @@ import { sortedAndGroupedShows } from "@/mock";
 import { createRouter, createWebHistory } from "vue-router";
 import { createPinia, setActivePinia } from "pinia";
 import HomeView from "@/views/HomeView.vue";
-import ShowView from "@/viewws/ShowView.vue";
+import ShowView from "@/views/ShowView.vue";
 
 describe("ShowList", () => {
   let wrapper;
