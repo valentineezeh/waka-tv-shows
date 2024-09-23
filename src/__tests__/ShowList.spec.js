@@ -3,11 +3,11 @@ import { mount } from "@vue/test-utils";
 import ShowList from "@/components/ShowList.vue";
 import ShowListings from "@/components/ShowListings.vue";
 import NotFound from "@/components/NotFound.vue";
-import { filteredAndGroupedShows, sortedAndGroupedShows } from "@/mock";
+import { sortedAndGroupedShows } from "@/mock";
 import { createRouter, createWebHistory } from "vue-router";
 import { createPinia, setActivePinia } from "pinia";
 import HomeView from "@/views/HomeView.vue";
-import ShowView from "@/views/ShowView.vue";
+import ShowView from "@/viewws/ShowView.vue";
 
 describe("ShowList", () => {
   let wrapper;
