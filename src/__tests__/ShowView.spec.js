@@ -44,7 +44,6 @@ describe("ShowView", () => {
       ],
     });
     vi.spyOn(store, 'getSelectedShow').mockImplementation(id => {
-      console.log('id >>>>> ', id)
       return Promise.resolve({
       id: parseInt(id),
       name: `Test show ${Number(id)}`}

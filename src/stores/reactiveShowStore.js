@@ -51,7 +51,9 @@ export const useShowStoreReactive = defineStore("showStore", () => {
           const searchResults = await fetchFromAPI(
             `${apiUrl}/search/shows?q=${queryInput}`
           );
+
           const shows = searchResults.map((item) => item.show);
+
           state.searchedShows = shows;
           cacheData(shows, CACHE_KEY_SELECTED_SEARCH_SHOW);
         }
@@ -173,5 +175,6 @@ const debouncedFetchShows = debounce(700, fetchShows);
     setSelectSearchedShow,
     getSelectedShow,
     sortedAndGroupedShows,
+    fetchShows
   };
 });

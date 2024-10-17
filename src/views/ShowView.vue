@@ -19,7 +19,6 @@ const {
 
 onMounted(async () => {
   const showId = router.query.id;
-  console.log('ShowView mounted, showId:', showId);
   if (showId && !isNaN(showId)) {
     const data = await getSelectedShow(showId);
     state.show = data

@@ -29,14 +29,16 @@ export const useShowStore = defineStore("showStore", () => {
   const searchError = ref(null);
   const showDetailsError = ref(null);
 
-  const fetchShows = async (query = "") => {
+  const fetchShows = async (query) => {
     try {
       if (query.trim().length !== 0) {
         isSearching.value = true;
         searchError.value = null;
 
         const queryInput = query.trim()
+
         const cachedData = getCachedData(CACHE_KEY_SELECTED_SEARCH_SHOW);
+
         const checkIfQueryExist = cachedData && cachedData.data.some(obj => obj.name.toLowerCase() === queryInput);
 
 
@@ -50,9 +52,13 @@ export const useShowStore = defineStore("showStore", () => {
           const searchResults = await fetchFromAPI(
             `${apiUrl}/search/shows?q=${queryInput}`,
           );
-          const shows = searchResults.map((item) => item.show);
+
+
+          const shows = searchResults
           searchedShows.value = shows;
+
           cacheData(shows, CACHE_KEY_SELECTED_SEARCH_SHOW);
+
         }
       } else {
         isLoading.value = true;
@@ -163,5 +169,6 @@ export const useShowStore = defineStore("showStore", () => {
     getSelectedShow,
     showDetailsError,
     sortedAndGroupedShows,
+    fetchShows
   };
 });
