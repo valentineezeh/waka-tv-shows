@@ -7,10 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test:unit": "vitest",
+    "test:unit": "vitest run --coverage",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
-    "ssr:dev": "node ./src/server.js"
+    "ssr:dev": "node ./src/server.js",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@sentry/vue": "^8.26.0",
@@ -24,6 +25,7 @@
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",
     "@vitejs/plugin-vue": "^5.0.5",
+    "@vitest/coverage-v8": "^2.1.3",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/test-utils": "^2.4.6",
     "eslint": "^8.57.0",
@@ -32,6 +34,6 @@
     "jsdom": "^24.1.0",
     "prettier": "^3.2.5",
     "vite": "^5.3.1",
-    "vitest": "^1.6.0"
+    "vitest": "^2.1.3"
   }
 }

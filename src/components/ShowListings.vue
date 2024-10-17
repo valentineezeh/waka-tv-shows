@@ -10,7 +10,8 @@ const props = defineProps({
 </script>
 
 <template>
-  <section class="card-container">
+  <div class="scroll-container">
+    <section class="card-container">
     <div v-for="show in shows" :key="show.id">
       <Card
         :imageUrl="show.image.medium"
@@ -21,4 +22,5 @@ const props = defineProps({
       />
     </div>
   </section>
+  </div>
 </template>

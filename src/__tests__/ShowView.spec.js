@@ -1,6 +1,5 @@
 import { describe, it, beforeEach, expect, vi } from "vitest";
 import { mount } from "@vue/test-utils";
-import { reactive } from '@vue/reactivity'
 import { createPinia, setActivePinia } from "pinia";
 import { createRouter, createWebHistory } from "vue-router";
 import ShowView from "@/views/ShowView.vue";
@@ -12,6 +11,22 @@ import ShowView from "@/views/ShowView.vue";
 import { shows } from '@/mock'
 
 const selectedShow = shows[0];
+
+vi.mock('vue-router', async () => {
+  const actual = await vi.importActual('vue-router')
+  return {
+    ...actual,
+    useRouter: vi.fn(() => ({
+      currentRoute: {
+        value: {
+          query: {
+          id: '123'
+        }
+        }
+      }
+    }))
+  }
+})
 
 
 describe("ShowView", () => {
@@ -28,6 +43,13 @@ describe("ShowView", () => {
         { path: "/show", name: "show", component: ShowView },
       ],
     });
+    vi.spyOn(store, 'getSelectedShow').mockImplementation(id => {
+      console.log('id >>>>> ', id)
+      return Promise.resolve({
+      id: parseInt(id),
+      name: `Test show ${Number(id)}`}
+    )
+    })
   });
   it("renders ShowDetails component", async() => {
     store.selectedShow = selectedShow;
@@ -63,4 +85,18 @@ describe("ShowView", () => {
     const notFound = showView.findComponent(NotFound);
     expect(notFound.exists()).toBe(true);
   });
+
+  it("calls getSelectedShow with the correct showId on mount", async() => {
+
+    const wrapper = mount(ShowView, {
+      global: {
+        plugins: [router],
+      },
+    })
+    await wrapper.vm.$nextTick()
+
+     console.log('component instance: ', wrapper.vm)
+
+    expect(store.getSelectedShow).toHaveBeenNthCalledWith('123')
+  })
 });

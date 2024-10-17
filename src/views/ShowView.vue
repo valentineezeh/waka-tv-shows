@@ -16,10 +16,11 @@ const {
   getSelectedShow,
   isLoading
 } = useShowStoreReactive();
-const showId = router.query.id;
 
 onMounted(async () => {
-  if (!isNaN(showId)) {
+  const showId = router.query.id;
+  console.log('ShowView mounted, showId:', showId);
+  if (showId && !isNaN(showId)) {
     const data = await getSelectedShow(showId);
     state.show = data
   }
